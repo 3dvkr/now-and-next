@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+  <title>(title goes here)</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    * {
+      padding: 0.25rem 0.5rem;
+    }
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    form,
+    figure,
+    blockquote,
+    dl,
+    dd {
+      margin: 0;
+      padding: 0;
+    }
+
+    html:focus-within {
+      scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html:focus-within {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    * {
+      font-family: "Arial";
+      letter-spacing: 0.15ch;
+    }
+
+    main {
+      margin: 0 auto;
+      max-width: 50ch;
+    }
+
+    h1,
+    h2,
+    h3 {
+      letter-spacing: 0.05ch;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    div {
+      background: lightsteelblue;
+      margin-block: 0.5rem;
+      border-radius: 3px;
+    }
+
+    div:last-of-type {
+      background: rgb(232, 216, 40);
+      margin-top: 1.5rem;
+    }
+
+    p {
+      background: whitesmoke;
+    }
+
+    .bg-active-dropzone {
+      background: rgba(124, 170, 255, 0.3);
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>(title goes here)</h1>
+    <form action="">
+      <label for="new-item">New Item</label>
+      <input type="text" id="new-item" name="new-item">
+      <button id="add-item-btn">Add</button>
+    </form>
+    <div id="now">
+      <h2>Now</h2>
+    </div>
+    <div id="next">
+      <h2>Next</h2>
+    </div>
+    <div id="source">
+      <h2>Today</h2>
+    </div>
+    <div id="done">
+      <h2>Done</h2>
+    </div>
+  </main>
+  <script defer>
+    // dropzone behavior
+    const sourceZone = document.getElementById("source")
+    const dropzones = document.querySelectorAll("div")
+    dropzones.forEach((zone) => {
+      zone.addEventListener("drop", dropzoneHandler(zone.id))
+      zone.addEventListener("dragleave", dragleaveHandler(zone.id))
+      zone.addEventListener("dragover", dragoverHandler(zone.id))
+    })
+
+    // adding tasks functionality
+    const form = document.querySelector("form")
+    const addItemBtn = document.getElementById("add-item-btn")
+    const newItem = document.getElementById("new-item")
+    const addItem = (e) => {
+      e.preventDefault()
+      inputSubmitReset(newItem.value)
+    }
+    addItemBtn.addEventListener("click", addItem)
+    form.addEventListener("submit", addItem)
+
+    // helpers
+    const createItem = itemHandler()
+    function itemHandler() {
+      let count = -1
+      return function (str) {
+        const newItem = document.createElement("p")
+        const newItemText = document.createTextNode(str)
+        newItem.appendChild(newItemText)
+        newItem.draggable = true
+        newItem.tabIndex = 0
+        newItem.addEventListener("dragstart", dragstartHandler)
+        newItem.addEventListener("focus", focusMove)
+        newItem.id = "p" + ++count
+        sourceZone.appendChild(newItem)
+      }
+    }
+    function inputSubmitReset(str) {
+      document.querySelector("input").value = ""
+      document.querySelector("input").focus()
+      if(str && str !== '') createItem(str)
+    }
+
+    function dropzoneHandler(zoneId) {
+      return function (ev) {
+        document.getElementById(zoneId).classList.remove("bg-active-dropzone")
+        const data = ev.dataTransfer.getData("application/my-app")
+        document.getElementById(data).style.opacity = 1
+        ev.currentTarget.appendChild(document.getElementById(data))
+      }
+    }
+    function dragoverHandler(zoneId) {
+      return function (ev) {
+        ev.preventDefault()
+        document.getElementById(zoneId).classList.add("bg-active-dropzone")
+        ev.dataTransfer.dropEffect = "move";
+      }
+    }
+    function dragleaveHandler(zoneId) {
+      return function (ev) {
+        document.getElementById(zoneId).classList.remove("bg-active-dropzone")
+        ev.dataTransfer.dropEffect = "move"
+      }
+    }
+    function dragstartHandler(ev) {
+      // Add the target element's id to the data transfer object
+      ev.dataTransfer.setData("application/my-app", ev.target.id)
+      ev.dataTransfer.effectAllowed = "move"
+    }
+    function focusMove(focusEvent) {
+      focusEvent.target.style.opacity = 0.5
+      const keydownHandler = (keyEvent) => {
+        if (keyEvent.key === "Enter" || keyEvent.key === "Escape") {
+          focusEvent.target.style.opacity = 1
+          document.removeEventListener("keydown", keydownHandler)
+          inputSubmitReset()
+        } else if (keyEvent.key === "ArrowDown" || keyEvent.key === "j") {
+          const currentNode = focusEvent.target
+          const parent = currentNode.parentElement
+          if (parent.nextElementSibling && parent.nextElementSibling.tagName === "DIV") {
+            parent.nextElementSibling.appendChild(currentNode)
+          }
+        } else if (keyEvent.key === "ArrowUp" || keyEvent.key === "k") {
+          const currentNode = focusEvent.target
+          const parent = currentNode.parentElement
+          if(parent.previousElementSibling.tagName === "DIV") {
+            parent.previousElementSibling.appendChild(currentNode)
+          } else {
+            document.getElementById("done").appendChild(currentNode)
+            focusEvent.target.style.opacity = 1
+            document.removeEventListener("keydown", keydownHandler)
+            inputSubmitReset()
+          }
+        }
+      }
+      document.addEventListener("keydown", keydownHandler)
+    }
+  </script>
+</body>
+
+</html>
