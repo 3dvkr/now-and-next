@@ -5,7 +5,8 @@
 }
 
 * {
-  padding: 0.25rem 0.5rem;
+  --space: 0.5rem;
+  padding: var(--space);
 }
 
 body {
@@ -19,8 +20,8 @@ h1,
 h2,
 h3,
 h4,
-form,
 figure,
+label,
 blockquote,
 dl,
 dd {
@@ -66,6 +67,7 @@ h3 {
 }
 
 div {
+  --space: 0.75rem;
   background: lightsteelblue;
   margin-block: 0.5rem;
   border-radius: 3px;
@@ -79,13 +81,27 @@ div:last-of-type {
 p {
   background: whitesmoke;
   border-radius:2px;
+  margin: 0;
+  padding-block: 0.75em;
+  border-bottom: 0.1em solid lightsteelblue
+}
+
+form {
+  --space: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #ddd;
+}
+form > input {
+  flex-grow: 2;
 }
 
 .bg-active-dropzone {
   background: rgba(124, 170, 255, 0.3);
 }
 @media (prefers-color-scheme: dark) {
-  div {color: black;}
+  div, form {color: black;}
   div p {
     background: hsl(214, 40%, 25%);
     color: CanvasText;
