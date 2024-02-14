@@ -1,5 +1,5 @@
 import { saveItems, getItems } from './state.js'
-import { inputSubmitReset } from './utils.js'
+import { inputSubmitReset } from './tasks.js'
 import {
 	dropzones,
 	dragleaveHandler,
@@ -7,6 +7,26 @@ import {
 	dropzoneHandler,
 } from './dropzone.js'
 import { createItem } from './tasks.js'
+
+function clearItems(zoneId = 'all') {
+	if (zoneId === 'all') {
+		dropzones.forEach((zone) => {
+			while (zone.children.length !== 1) {
+				zone.lastChild.remove()
+			}
+			localStorage.setItem('now-and-next-' + zone.id, null)
+		})
+	} else {
+		let keyPrefix = 'now-and-next-'
+		localStorage.setItem(keyPrefix + zoneId, null)
+
+		const zone = document.getElementById(zoneId)
+		while (zone.children.length !== 1) {
+			zone.lastChild.remove()
+		}
+	}
+}
+
 
 dropzones.forEach((zone) => {
 	// make active drop zones

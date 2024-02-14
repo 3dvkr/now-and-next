@@ -1,5 +1,6 @@
 import { saveItems } from './state.js'
-import { zoneHasSpace, inputSubmitReset } from './utils.js'
+import { zoneHasSpace } from './dropzone.js'
+import { inputSubmitReset } from './tasks.js'
 // keyboard access
 export function keyBindingToggle(element, isFocused = true) {
 	if (isFocused) {

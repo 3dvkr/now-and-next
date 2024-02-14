@@ -3,6 +3,13 @@ import { keyBindingToggle } from './keyboard.js'
 
 export const createItem = itemHandler()
 
+export function inputSubmitReset() {
+	const str = document.querySelector('input').value
+	document.querySelector('input').focus()
+	if (str && str !== '') createItem('source')(str)
+	document.querySelector('input').value = ''
+}
+
 function itemHandler() {
 	let count = -1
 	return (zoneId) => (str) => {
