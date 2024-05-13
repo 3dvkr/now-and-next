@@ -1,18 +1,18 @@
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 * {
-  --space: 0.5rem;
-  padding: var(--space);
+	--space: 0.5rem;
+	padding: var(--space);
 }
 
 body {
-  color-scheme: light dark;
-  background-color: Canvas;
-  color: CanvasText;
+	color-scheme: light dark;
+	background-color: Canvas;
+	color: CanvasText;
 }
 
 body,
@@ -25,85 +25,154 @@ label,
 blockquote,
 dl,
 dd {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 html:focus-within {
-  scroll-behavior: smooth;
+	scroll-behavior: smooth;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html:focus-within {
-    scroll-behavior: auto;
-  }
+	html:focus-within {
+		scroll-behavior: auto;
+	}
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }
 
 * {
-  font-family: "Arial";
-  letter-spacing: 0.15ch;
+	font-family: 'Arial';
+	letter-spacing: 0.15ch;
 }
 
 main {
-  margin: 0 auto;
-  max-width: 50ch;
+	margin: 0 auto;
+	max-width: 50ch;
 }
 
 h1,
 h2,
 h3 {
-  letter-spacing: 0.05ch;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
+	letter-spacing: 0.05ch;
+	margin-top: 0.5rem;
+	margin-bottom: 1rem;
 }
 
 div {
-  --space: 0.75rem;
-  background: lightsteelblue;
-  margin-block: 0.5rem;
-  border-radius: 3px;
+	--space: 0.75rem;
+	background: lightsteelblue;
+	margin-block: 0.5rem;
+	border-radius: 3px;
 }
 
 div:last-of-type {
-  background: rgb(232, 216, 40);
-  margin-top: 1.5rem;
+	background: rgb(232, 216, 40);
+	margin-top: 1.5rem;
 }
 
 p {
-  background: whitesmoke;
-  border-radius:2px;
-  margin: 0;
-  padding-block: 0.75em;
-  border-bottom: 0.1em solid lightsteelblue
+	background: whitesmoke;
+	border-radius: 2px;
+	margin: 0;
+	padding-block: 0.75em;
+	border-bottom: 0.1em solid lightsteelblue;
 }
 
 form {
-  --space: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: #ddd;
+	--space: 0.75rem;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	background: #ddd;
 }
 form > input {
-  flex-grow: 2;
+	flex-grow: 2;
 }
 
 .bg-active-dropzone {
-  background: rgba(124, 170, 255, 0.3);
+	background: rgba(124, 170, 255, 0.3);
 }
 @media (prefers-color-scheme: dark) {
-  div, form {color: black;}
-  div p {
-    background: hsl(214, 40%, 25%);
-    color: CanvasText;
-  }
+	div,
+	form {
+		color: black;
+	}
+	div p {
+		background: hsl(214, 40%, 25%);
+		color: CanvasText;
+	}
 }
+
+/* microinteractions */
+
+main {
+	position: relative;
+}
+
+/* .rain {
+  
+      overflow:hidden;  
+  
+    } */
+
+.tada {
+	position: absolute;
+	/* content: "🎉"; */
+	/* font-size: 4em; */
+
+	/*
+  
+    matrix for a translation
+  
+    1   0   tx
+  
+    0   1   ty
+  
+    0   0   1
+  
+    */
+
+	top: 0;
+	left: 0;
+	transform: translateY(0);
+	/* transform: matrix(1, 0, 0, 1, 0, 0); */
+	opacity: 1;
+	transition: transform 4s cubic-bezier(0.215, 0.610, 0.355, 1), opacity 2s 2s;
+	/* transition: opacity 2s 2s; */
+	/* animation: spin 3s linear(0, 0.2 0.21); */
+}
+
+.tada.rain {
+	transform: translateY(80vh);
+	/* transform: matrix(1, 0, 0, 1, 0, 200); */
+	opacity: 0;
+}
+
+@keyframes spin {
+	0%,
+	100% {
+		transform: rotateY(0deg) translateY(0);
+	}
+	20%,
+	80% {
+		transform: rotateY(10deg) translateY(20vh);
+	}
+	40%,
+	60% {
+		transform: rotateY(45deg) translateY(40vh);
+	}
+}
+
+
+/* 
+distance = (1/2) (gravity) (time) ^2
+translateY(0)
+*/
